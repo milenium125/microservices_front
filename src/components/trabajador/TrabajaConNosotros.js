@@ -1,8 +1,8 @@
-import "./styles.css";
+import "../styles.css";
 
 import React, { useState } from 'react';
 import {Link, BrowserRouter} from 'react-router-dom';
-import { LoginTrabajador } from "../scripts/LoginController";
+import { LoginTrabajador } from "../../scripts/LoginController";
 import {
     MDBCard,
     MDBCardBody,

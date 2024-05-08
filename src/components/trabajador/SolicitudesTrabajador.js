@@ -2,9 +2,9 @@ import {Link, Routes, BrowserRouter} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import Header from './header';
-import NuevaSolicitud from './NuevaSolicitud';
-import { DetalleSolicitud } from './Solicitud';
+import Header from '../Header';
+import NuevaSolicitud from '../usuario/NuevaSolicitud';
+import { DetalleSolicitud } from '../usuario/Solicitud';
 import {
     MDBTabs,
     MDBTabsItem,
@@ -314,7 +314,7 @@ export function SolicitudesTrabajador(){
             <section style={{backgroundColor: "#eee", height: "100vh"}} className="pb-5 w-100">
             <Header />
             {/* <!-- Navbar --> */}
-            <div className="container d-flex py-5">
+            <div className="container-fluid d-flex py-5">
             {/* <!-- Navbar --> */}
             <MDBModal tabIndex='-1' show={centredModal} setShow={setCentredModal}>
                     <MDBModalDialog>
@@ -562,7 +562,7 @@ export function SolicitudesTrabajador(){
                     <ul className="list-group list-group-flush rounded-3">
                     <li className="list-group-item d-flex justify-content-start align-items-center p-3">
                         <i class="fas fa-user-tie"></i>
-                        <a className="mx-5 mb-0 text-decoration-none" style={{cursor: "pointer"}} >Mis Solicitudes</a>
+                        <a className="mx-5 mb-0 text-decoration-none" style={{cursor: "pointer"}} onClick={() =>handleFillClick('tab1')} >Mis Solicitudes</a>
                     </li>
                     <li className="list-group-item d-flex justify-content-start align-items-center p-3">
                         <i class="fas fa-list-check"></i>
@@ -574,7 +574,7 @@ export function SolicitudesTrabajador(){
                     </li>
                     <li className="list-group-item d-flex justify-content-start align-items-center p-3">
                         <i class="fa-solid fa-circle-question"></i>
-                        <a className="mx-5 mb-0 text-decoration-none" style={{cursor: "pointer"}}>Centro de ayuda</a>
+                        <Link to="/centro-ayuda" className="mx-5 mb-0 text-decoration-none" style={{cursor: "pointer"}}>Centro de ayuda</Link>
                     </li>
                     </ul>
                 </div>

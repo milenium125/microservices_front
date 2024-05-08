@@ -1,7 +1,6 @@
-import Header from "./header"
+import Header from "../Header"
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
-
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
@@ -11,8 +10,6 @@ import {
   MDBCardTitle,
   MDBCardText,
   MDBCardImage,
-  MDBCardHeader,
-  MDBRipple,
   MDBCardFooter,
   MDBBtn,
   MDBModal,
@@ -29,44 +26,39 @@ import {
   MDBTextArea
 } from 'mdb-react-ui-kit';
 
-import { Link } from "react-router-dom";
-
 let cookies = document.cookie;
-          var id_login = 0;
-          var value = "";
-          var key = "";
-          console.log(`Todas las cookies: ${cookies}`);
-          for (let i = 0; i < cookies.length ; i++) {   
-              console.log(cookies[i]); 
-              
-              if(cookies[i] === "="){
-                  while(cookies[i] == ";" || i < cookies.length){
-                      console.log(`key / value : ${key} / ${value}`); 
-                      if(cookies[i] === "="){
-                          i++;
-                          continue;
-                      }
-                      value = value + cookies[i];
-
-                      i++;
-                  }
-                  if(key === "id_sesion"){
-                      id_login = parseInt(value);
-                      console.log(`key / value ok : ${key} / ${value}`); 
-                      i++;
-                      break;
-                  }else{
-                      key = "";
-                      value = "";
-                  }
-                  
-              }else{
-                  key = key + cookies[i];
-              } 
-          }
+var id_login = 0;
+var value = "";
+var key = "";
+console.log(`Todas las cookies: ${cookies}`);
+for (let i = 0; i < cookies.length ; i++) {   
+    console.log(cookies[i]);    
+    if(cookies[i] === "="){
+        while(cookies[i] == ";" || i < cookies.length){
+            console.log(`key / value : ${key} / ${value}`); 
+            if(cookies[i] === "="){
+                i++;
+                continue;
+            }
+            value = value + cookies[i];
+            i++;
+        }
+        if(key === "id_sesion"){
+            id_login = parseInt(value);
+            console.log(`key / value ok : ${key} / ${value}`); 
+            i++;
+            break;
+        }else{
+            key = "";
+            value = "";
+        }
+    }else{
+        key = key + cookies[i];
+    } 
+}
 
 export default function FindServices(){
-    var [centredModal, setCentredModal] = useState(false);
+    const [centredModal, setCentredModal] = useState(false);
     const [servicios, setServicios] = useState([]);
     const [empleados, setEmpleados] = useState([]);
     const [nombre, setNombre] = useState("");
@@ -86,6 +78,49 @@ export default function FindServices(){
     var [classModalServicio, setClassModalServicio] = useState("d-block");
     var [classModalTrabajadores, setModalTrabajadores] = useState("d-none");
     var [classModalFinalizarSolicitud, setModalFinalizarSolicitud] = useState("d-none");
+
+    useEffect( () => { 
+        const fetchData = async () => {
+          try {  
+            var result_client = await consultarServicios();
+            console.log(result_client);
+            var servicios = [];
+            var result_client_json;
+            for (let i = 0; i < result_client.data.length; i++) {
+                result_client_json = JSON.parse(result_client.data[i]);
+                console.log("Datos servicio");
+                console.log(result_client_json);
+                if (result_client_json.estado === 1) {
+                    servicios.push({
+                        id: result_client_json.id_servicio,
+                        content: card_servicio(
+                            result_client_json.servicio,
+                            result_client_json.descripcion,
+                            result_client_json.precio,
+                            toggleShow,
+                            result_client_json.id_servicio
+                        )
+                    });
+                }
+            }
+            setServicios(servicios);
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        };
+    
+        fetchData();
+      }, []); // Empty dependency array ensures useEffect runs once on mount
+    
+    
+    var toggleShow = () => {
+        setCentredModal(!centredModal);
+        console.log("funciona"+centredModal);
+        setClassModalServicio("d-block");
+        setModalTrabajadores("d-none");
+        setModalFinalizarSolicitud("d-none");
+        //console.log(result_client.data[id_servicio]);  
+    };
 
     var changeModal = (accion) => {
         
@@ -107,34 +142,35 @@ export default function FindServices(){
     //Funcion para mostrar los empleados que prestan el servicio seleccionado por el cliente
     const getEmpleadosByService = async (id) =>{
         let result_employees = await axios.get(`http://localhost:3200/api/service/trabajador/${(id)}`);
-        console.log("empleados: "+id);
+        console.log("result_employees.data");
         let employeesData = [];
         var result_employee_json;
         console.log("dato: "+result_employees.data);
         for (let i = 0; i < result_employees.data.length; i++) {
             let result_employees_data = await axios.get(`http://localhost:3200/api/trabajador/find/${result_employees.data[i]}`);
             result_employee_json = result_employees_data.data;
-                console.log(result_employee_json);
-                var profesion;
-                if(result_employee_json.id_rol === 1){
-                    profesion = "Trabajador";
-                }
-                if (true) {
-                    employeesData.push({
-                        id: result_employee_json.id_servicio,
-                        content: card_employee(
-                            result_employee_json._pictureProfile,
-                            (result_employee_json._firstNameUser + " " + result_employee_json._lastNameUser),
-                            result_employee_json._ocupacion,
-                            result_employee_json._idTrabajador
-                        )
-                    });
-                }
+            console.log(result_employee_json);
+            var profesion;
+            if(result_employee_json.id_rol === 1){
+                profesion = "Trabajador";
+            }
+            if(true) {
+                employeesData.push({
+                    id: result_employee_json.id_servicio,
+                    content: card_employee(
+                        result_employee_json._pictureProfile,
+                        (result_employee_json._firstNameUser + " " + result_employee_json._lastNameUser),
+                        result_employee_json._ocupacion,
+                        result_employee_json._idUser
+                    )
+                });
+            }
             console.log(result_employees_data.data);
         }
         console.log();
         setEmpleados(employeesData);
-    } 
+    }
+
     // Funcion para seleccionar el empleado que se desea que preste el servicio, 
     const seleccionar = async (id) =>{
         let result_employees_data = await axios.get(`http://localhost:3200/api/trabajador/find/${id}`);
@@ -207,53 +243,6 @@ export default function FindServices(){
             </tr>
         );
     }
-
-    
-
-    useEffect( () => {
-        
-        const fetchData = async () => {
-
-          try {  
-            var result_client = await consultarServicios();
-            console.log(result_client);
-            var servicios = [];
-            var result_client_json;
-            for (let i = 0; i < result_client.data.length; i++) {
-                result_client_json = JSON.parse(result_client.data[i]);
-                console.log("Datos servicio");
-                console.log(result_client_json);
-                if (result_client_json.estado === 1) {
-                    servicios.push({
-                        id: result_client_json.id_servicio,
-                        content: card_servicio(
-                            result_client_json.servicio,
-                            result_client_json.descripcion,
-                            result_client_json.precio,
-                            toggleShow,
-                            result_client_json.id_servicio
-                        )
-                    });
-                }
-            }
-            setServicios(servicios);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        };
-    
-        fetchData();
-      }, []); // Empty dependency array ensures useEffect runs once on mount
-    
-    
-    var toggleShow = () => {
-        setCentredModal(!centredModal);
-        console.log("funciona"+centredModal);
-        setClassModalServicio("d-block");
-        setModalTrabajadores("d-none");
-        setModalFinalizarSolicitud("d-none");
-        //console.log(result_client.data[id_servicio]);  
-    };
     
     const consultarServicios = async (id) =>{
         
@@ -299,6 +288,7 @@ export default function FindServices(){
 
         const id_cliente = await axios.get("http://localhost:3200/api/client/find/user/"+id_login);
         console.log("id cliente: "+id_cliente.data._idClient)
+        
         var parametros2 = {
             "descripcion": detalle,
             "total": precio,
@@ -331,7 +321,176 @@ export default function FindServices(){
             window.location.replace("http://localhost:3000/solicitud");
         }
     }
+    
+    function DetalleServicio(props){
+        return(
 
+                <MDBModalContent className={classModalServicio}>
+                <MDBModalHeader>
+                    
+                    <MDBModalTitle>{props.categoria}</MDBModalTitle>
+                          
+                    <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
+                </MDBModalHeader>
+                <MDBModalBody>
+                    <MDBCardText>{props.servicio}</MDBCardText>
+                    <MDBCardImage position='top' alt='...' src='https://st2.depositphotos.com/1008336/5216/v/450/depositphotos_52162507-stock-illustration-water-electricity-gas-utilities-household.jpg' />  
+                    <p className="p-3">
+                        {props.detalles}
+                    </p>
+                    <MDBCardText className="text-end me-3">{props.precio}</MDBCardText>
+                </MDBModalBody>
+                <MDBModalFooter>
+                    <MDBBtn color='secondary' onClick={toggleShow}>
+                        Cancelar
+                    </MDBBtn>
+                    <MDBBtn onClick={()=>{ getEmpleadosByService(props.id); changeModal(2)}}>Solicitar</MDBBtn>
+                </MDBModalFooter>
+             </MDBModalContent>
+
+        );
+    }
+
+    function MostrarTrabajadores(){
+        return(
+
+                <MDBModalContent scrollable className={classModalTrabajadores}>
+                <MDBModalHeader>
+                    
+                    <MDBModalTitle>Seleccione al tecnico</MDBModalTitle>
+                          
+                    <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
+                </MDBModalHeader>
+                <MDBModalBody>
+                    
+                    <MDBTable align='middle'>
+                    <MDBTableHead>
+                        <tr>
+                        <th scope='col'>Nombre</th>
+                        <th scope='col'>Area u ocupación</th>
+                        <th scope='col'>Perfil</th>
+                        <th scope='col'>Actions</th>
+                        </tr>
+                    </MDBTableHead>
+
+                    {empleados.map(empleado => (
+                        <tbody key={empleado.id} >
+                            {empleado.content}
+                        </tbody>
+                    )) }
+
+                    </MDBTable>
+                </MDBModalBody>
+                <MDBModalFooter>
+                    <MDBBtn color='secondary' onClick={toggleShow}>
+                        Cancelar
+                    </MDBBtn>
+                    <MDBBtn onClick={()=>changeModal(1)}>Atras</MDBBtn>
+                </MDBModalFooter>
+                </MDBModalContent>
+            
+        
+        );
+    }
+
+    function SeleccionarFinalizarSolicitud(){
+
+        var submit = () => {
+            var detalle = document.getElementById("detalle-solicitud").value;
+            confirmAlert({
+              title: 'Aceptar para continuar',
+              message: 'Click en Aceptar si desea realizar esta solicitud, de lo contrario Click en Cancelar',
+              buttons: [
+                {
+                  label: 'Continuar',
+                  onClick: () => guardarSolicitud(detalle)
+                },
+                {
+                  label: 'Cancelar',
+                  onClick: () => alert('Click No')
+                }
+              ]
+            });
+          };
+
+        return(
+
+                <MDBModalContent scrollable className={classModalFinalizarSolicitud}>
+                <MDBModalHeader>
+                    
+                    <MDBModalTitle>Detalle de la solicitud</MDBModalTitle>
+                          
+                    <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
+                </MDBModalHeader>
+                <MDBModalBody>
+                    
+                    <MDBCard>
+                    <MDBCardBody>
+                        <MDBCardTitle>Servicio Seleccionado</MDBCardTitle>
+                        <MDBCardText>
+                            <MDBCardText>{nombre}</MDBCardText>
+                            <MDBCardImage position='top' alt='...' src='https://cenacap.edu.co/wp-content/uploads/2021/12/electricidad-residencial.jpg' />  
+                            <p className="p-3">
+                            {detalles}
+                            </p>
+                            <MDBCardText className="text-end me-3">{precio}</MDBCardText>
+                        </MDBCardText>
+                        <MDBBtn>cambiar</MDBBtn>
+                        <hr />
+                        <MDBCardText>Tecnicó Seleccionado</MDBCardText>
+                        <MDBModalHeader>
+                </MDBModalHeader>
+                    
+                    <MDBTable align='middle'>
+                    <MDBTableHead>
+                        <tr>
+                        <th scope='col'>Nombre</th>
+                        <th scope='col'>Area u ocupación</th>
+                        </tr>
+                    </MDBTableHead>
+                    <MDBTableBody>
+                        <tr>
+                        <td>
+                            <div className='d-flex align-items-center'>
+                            <img
+                                src={fotoEmpleado}
+                                alt=''
+                                style={{ width: '45px', height: '45px' }}
+                                className='rounded-circle'
+                            />
+                            <div className='ms-3'>
+                                <p className='fw-bold mb-1'>{nombreEmpleado}</p>
+                                <p className='text-muted mb-0'>puntuacion</p>
+                            </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p className='fw-normal mb-1'>{profesionEmpleado}</p>
+                        </td>
+                        </tr>
+                        
+                    </MDBTableBody>
+                    </MDBTable>
+                    <MDBTextArea id="detalle-solicitud" rows={6} label="Descripción" >
+
+                    </MDBTextArea>
+                    </MDBCardBody>
+                    </MDBCard>
+                </MDBModalBody>
+                <MDBModalFooter>
+                <MDBBtn onClick={()=>{submit(); toggleShow(); }}>Finalizar </MDBBtn>
+                
+
+                    <MDBBtn color='secondary' onClick={toggleShow}>
+                        Cancelar
+                    </MDBBtn>
+                    <MDBBtn onClick={()=>changeModal(2)}>Atras</MDBBtn>
+                </MDBModalFooter>
+                </MDBModalContent>
+            
+        
+        );
+    }
     return(
         <>
             <Header />
@@ -479,172 +638,4 @@ export default function FindServices(){
             </div>
         </>
         );
-    
-    function DetalleServicio(props){
-        return(
-
-                <MDBModalContent className={classModalServicio}>
-                <MDBModalHeader>
-                    
-                    <MDBModalTitle>{props.categoria}</MDBModalTitle>
-                          
-                    <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
-                </MDBModalHeader>
-                <MDBModalBody>
-                    <MDBCardText>{props.servicio}</MDBCardText>
-                    <MDBCardImage position='top' alt='...' src='https://st2.depositphotos.com/1008336/5216/v/450/depositphotos_52162507-stock-illustration-water-electricity-gas-utilities-household.jpg' />  
-                    <p className="p-3">
-                        {props.detalles}
-                    </p>
-                    <MDBCardText className="text-end me-3">{props.precio}</MDBCardText>
-                </MDBModalBody>
-                <MDBModalFooter>
-                    <MDBBtn color='secondary' onClick={toggleShow}>
-                        Cancelar
-                    </MDBBtn>
-                    <MDBBtn onClick={()=>{ getEmpleadosByService(props.id); changeModal(2)}}>Solicitar</MDBBtn>
-                </MDBModalFooter>
-             </MDBModalContent>
-
-        );
-    }
-    function MostrarTrabajadores(){
-        return(
-
-                <MDBModalContent scrollable className={classModalTrabajadores}>
-                <MDBModalHeader>
-                    
-                    <MDBModalTitle>Seleccione al tecnico</MDBModalTitle>
-                          
-                    <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
-                </MDBModalHeader>
-                <MDBModalBody>
-                    
-                    <MDBTable align='middle'>
-                    <MDBTableHead>
-                        <tr>
-                        <th scope='col'>Nombre</th>
-                        <th scope='col'>Area u ocupación</th>
-                        <th scope='col'>Perfil</th>
-                        <th scope='col'>Actions</th>
-                        </tr>
-                    </MDBTableHead>
-
-                    {empleados.map(empleado => (
-                        <tbody key={empleado.id} >
-                            {empleado.content}
-                        </tbody>
-                    )) }
-
-                    </MDBTable>
-                </MDBModalBody>
-                <MDBModalFooter>
-                    <MDBBtn color='secondary' onClick={toggleShow}>
-                        Cancelar
-                    </MDBBtn>
-                    <MDBBtn onClick={()=>changeModal(1)}>Atras</MDBBtn>
-                </MDBModalFooter>
-                </MDBModalContent>
-            
-        
-        );
-    }
-    function SeleccionarFinalizarSolicitud(){
-
-        var submit = () => {
-            var detalle = document.getElementById("detalle-solicitud").value;
-            confirmAlert({
-              title: 'Aceptar para continuar',
-              message: 'Click en Aceptar si desea realizar esta solicitud, de lo contrario Click en Cancelar',
-              buttons: [
-                {
-                  label: 'Continuar',
-                  onClick: () => guardarSolicitud(detalle)
-                },
-                {
-                  label: 'Cancelar',
-                  onClick: () => alert('Click No')
-                }
-              ]
-            });
-          };
-
-        return(
-
-                <MDBModalContent scrollable className={classModalFinalizarSolicitud}>
-                <MDBModalHeader>
-                    
-                    <MDBModalTitle>Detalle de la solicitud</MDBModalTitle>
-                          
-                    <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
-                </MDBModalHeader>
-                <MDBModalBody>
-                    
-                    <MDBCard>
-                    <MDBCardBody>
-                        <MDBCardTitle>Servicio Seleccionado</MDBCardTitle>
-                        <MDBCardText>
-                            <MDBCardText>{nombre}</MDBCardText>
-                            <MDBCardImage position='top' alt='...' src='https://cenacap.edu.co/wp-content/uploads/2021/12/electricidad-residencial.jpg' />  
-                            <p className="p-3">
-                            {detalles}
-                            </p>
-                            <MDBCardText className="text-end me-3">{precio}</MDBCardText>
-                        </MDBCardText>
-                        <MDBBtn>cambiar</MDBBtn>
-                        <hr />
-                        <MDBCardText>Tecnicó Seleccionado</MDBCardText>
-                        <MDBModalHeader>
-                </MDBModalHeader>
-                    
-                    <MDBTable align='middle'>
-                    <MDBTableHead>
-                        <tr>
-                        <th scope='col'>Nombre</th>
-                        <th scope='col'>Area u ocupación</th>
-                        </tr>
-                    </MDBTableHead>
-                    <MDBTableBody>
-                        <tr>
-                        <td>
-                            <div className='d-flex align-items-center'>
-                            <img
-                                src={fotoEmpleado}
-                                alt=''
-                                style={{ width: '45px', height: '45px' }}
-                                className='rounded-circle'
-                            />
-                            <div className='ms-3'>
-                                <p className='fw-bold mb-1'>{nombreEmpleado}</p>
-                                <p className='text-muted mb-0'>puntuacion</p>
-                            </div>
-                            </div>
-                        </td>
-                        <td>
-                            <p className='fw-normal mb-1'>{profesionEmpleado}</p>
-                        </td>
-                        </tr>
-                        
-                    </MDBTableBody>
-                    </MDBTable>
-                    <MDBTextArea id="detalle-solicitud" rows={6} label="Descripción" >
-
-                    </MDBTextArea>
-                    </MDBCardBody>
-                    </MDBCard>
-                </MDBModalBody>
-                <MDBModalFooter>
-                <MDBBtn onClick={()=>{submit(); toggleShow(); }}>Finalizar </MDBBtn>
-                
-
-                    <MDBBtn color='secondary' onClick={toggleShow}>
-                        Cancelar
-                    </MDBBtn>
-                    <MDBBtn onClick={()=>changeModal(2)}>Atras</MDBBtn>
-                </MDBModalFooter>
-                </MDBModalContent>
-            
-        
-        );
-    }
 }

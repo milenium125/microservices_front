@@ -1,7 +1,8 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
-
-import Header from './header';
+import {SideBar, getSidebarInformation } from './PerfilTrabajador';
+import { Link } from "react-router-dom";
+import Header from '../Header';
 import {
     MDBTable,
     MDBTableHead,
@@ -90,6 +91,7 @@ export function Servicios(){
     const [estadoSuccess, setEstadoSuccess] = useState("none");
     const [tab, setTab] = useState(1);
     const [serviciosIndexs, setServiciosIndexs] = useState([]);
+    const [perfilTrabajador, setPerfilTrabajador] = useState({});
 
     const handleFillClick = (value) => {
         if (value === fillActive) {
@@ -107,7 +109,11 @@ export function Servicios(){
     }
 
     useEffect(() => {
+        
         const fetchData = async () => {
+        let trabajador = await getSidebarInformation();
+        console.log(trabajador);
+        setPerfilTrabajador(trabajador);
           try {
             
             let result_trabajador = await axios.get(`http://localhost:3200/api/trabajador/find/${id_login}`);
@@ -115,7 +121,8 @@ export function Servicios(){
             id_trabajador = result_trabajador.data._idTrabajador;
             handleFillClick('tab1');
             setTab(1);
-            mostrarServicios(1);
+            await mostrarServicios(1);
+            
             
             if(estado_success === 1){
                 setEstadoSuccess('block');
@@ -143,14 +150,8 @@ export function Servicios(){
         let arrayServicios = [];
         let arrayServiciosAll = [];
         let indices = [];
-            for (let i = 0; i < servicios.length; i++) {
-                indices.push(servicios[i].id_servicio);
-                console.log("Indices");
-                console.log(serviciosIndexs);
-              }
-              setServiciosIndexs(indices);
-        let result = await axios.get(`http://localhost:3200/api/service-trabajador/find/solicitud/${id_trabajador}`);
-        if(tabs === 1){
+            
+        let result = await axios.get(`http://localhost:3200/api/service-trabajador/find/solicitud/${id_trabajador}`); //peticion http para conocer cuales son los servicios que tiene agregados el trabajador
             console.log("servicio1");
             console.log(result.data);
             for (let i = 0; i < result.data.length && typeof(result.data) != "string"; i++) {
@@ -165,25 +166,31 @@ export function Servicios(){
                     "servicio": result_servicio.data.servicio,
                     "categoria": result_servicio.data.categoria,
                     "descripcion": result_servicio.data.descripcion
-                }
-                arrayServicios.push(solicitud); 
+                }//formato que se le da a cada uno de los objetos de la peticion anterior
+                arrayServicios.push(solicitud); //se agrega el objeto con el formato dado en la variable solicitud
                 console.log("arrayServicios");
                 console.log(arrayServicios);
           }
-          setServicios(arrayServicios);
-          
-        }
+          setServicios(arrayServicios);//se asigna a servicios por medio de su metodo set el valor del array formado en el for de nombre arrayServicios
+          for (let i = 0; i < arrayServicios.length; i++) {
+            indices.push(arrayServicios[i].id_servicio);
+            console.log("Indices");
+          }
+          setServiciosIndexs(indices);
+          console.log(serviciosIndexs);
         
-        else if(tabs === 2){
-            let resultAll = await axios.get(`http://localhost:3200/api/service/find`);
+        
+
+
+            let resultAll = await axios.get(`http://localhost:3200/api/service/find`);//peticion http para saber todos los servicios en base de datos
             console.log("servicio2");
             console.log(resultAll.data);
             console.log("servicios ----");
             console.log(serviciosIndexs);
             for (let i = 0; i < resultAll.data.length && typeof(result.data) != "string"; i++) {
                     console.log("servicio{{{{{");
-                    console.log(serviciosIndexs.includes(resultAll.data[i]._idService));
-                    console.log(resultAll.data[i]._idService);
+                    console.log();
+                    console.log(serviciosIndexs);
                     console.log(result.data);
                 if(serviciosIndexs.includes(resultAll.data[i]._idService)){
                     
@@ -197,27 +204,35 @@ export function Servicios(){
                     arrayServiciosAll.push(solicitud);
 
                 }
-                
             }
-        
         setServiciosAdd(arrayServiciosAll);
         console.log("----");
         console.log(arrayServiciosAll);
-        }
+    
+        
     }
 
 
     return(
         <>
         <Header />
+        <div className='d-flex container-fluid px-3'>
+        <SideBar ocupacion = {perfilTrabajador.ocupacion} estado = {perfilTrabajador.estado} nombre = {perfilTrabajador.nombre + " " + perfilTrabajador.apellido}/>
+        <div className=''>
         <MDBTabs>
             <MDBTabsItem>
-                <MDBTabsLink onClick={() => {handleFillClick('tab1'); setTab(1); mostrarServicios(1)}} active={fillActive === 'tab1'}>
+                <MDBTabsLink onClick={async () => {handleFillClick('tab1'); setTab(1); await mostrarServicios(1)}} active={fillActive === 'tab1'}>
                     Mis Servicios
                 </MDBTabsLink>
             </MDBTabsItem>
             <MDBTabsItem>
-                <MDBTabsLink onClick={() => { handleFillClick('tab2'); setTab(2); mostrarServicios(2)}} active={fillActive === 'tab2'}>
+                <MDBTabsLink onClick={async () => {  
+                    let datos = await mostrarServicios(1);
+                    await mostrarServicios(2, datos);
+                    handleFillClick('tab2');
+                    setTab(2);
+                }} 
+                active={fillActive === 'tab2'}>
                     Agregar Servicios
                 </MDBTabsLink>
             </MDBTabsItem>
@@ -310,8 +325,8 @@ export function Servicios(){
                 </MDBTable>
             </MDBTabsPane>
         </MDBTabsContent>
-
-        
+        </div>
+        </div>
         </>
     );
 }

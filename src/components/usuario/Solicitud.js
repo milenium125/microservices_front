@@ -2,7 +2,7 @@ import {Link, Routes, BrowserRouter} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert'; // Import
-import Header from './header';
+import Header from '../Header';
 import NuevaSolicitud from './NuevaSolicitud';
 import {
     MDBTabs,
@@ -291,7 +291,7 @@ export function Solicitud(){
             }});
         //     console.log("result_servicio.data");
         // console.log(result_servicio.data);
-        let result_trabajador = await axios.get(`http://localhost:3200/api/trabajador/find/${(result.data._employee)}`, {
+        let result_trabajador = await axios.get(`http://localhost:3200/api/trabajador/find/trabajador/${(result.data._employee)}`, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'origin':'x-requested-with',
@@ -313,23 +313,26 @@ export function Solicitud(){
     }
 
     const cambiarEstado = async (id, tab) => {
-        var parametros = {};
-        if(tab === 1){
-            parametros = {
-            "id_solicitud": id,
-            "estado": 3
-        }
-        }
-        if(tab === 2){
-            parametros = {
-            "id_solicitud": id,
-            "estado": 1
+        var estado = 0;
+        console.log("id, tab: "+id+", "+tab);
+        switch (tab) {
+            case 1:
+                estado = 3;
+                break;
+            case 2:
+                estado = 1;
+                break;
+            case 4:
+                console.log("ENTRE");
+                estado = 3;
+                break;
+            default:
+                break;
         }
         
-        }
         console.log("parametros");
-        console.log(parametros);
-        var actualizar_estado = await axios.post("http://localhost:3200/api/request/find/estado",parametros,{
+        console.log(estado);
+        var actualizar_estado = await axios.post("http://localhost:3200/api/request/find/estado",{"id_solicitud": id, "estado": estado},{
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -397,7 +400,7 @@ export function Solicitud(){
             let result_json = JSON.parse(result.data[i]);
             console.log(result_json);
             console.log("--------------------------------------");
-            let result_empleado = await axios.get(`http://localhost:3200/api/trabajador/find/${result_json.empleado}`);
+            let result_empleado = await axios.get(`http://localhost:3200/api/trabajador/find/trabajador/${result_json.empleado}`);
             console.log("empleado");
             console.log(result_empleado.data);
             console.log("datos"+ parseInt(result_json.empleado));

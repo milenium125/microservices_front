@@ -1,44 +1,31 @@
-import "./styles.css";
+import "../styles.css";
 
 import React, { useState } from 'react';
-import {Link, BrowserRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {
     MDBInput,
-    MDBContainer,
-    MDBNavbar,
-    MDBNavbarBrand,
-    MDBNavbarToggler,
-    MDBIcon,
-    MDBNavbarNav,
-    MDBNavbarItem,
-    MDBNavbarLink,
     MDBBtn,
-    MDBDropdown,
-    MDBDropdownToggle,
-    MDBDropdownMenu,
-    MDBDropdownItem,
-    MDBCollapse,
     MDBModal,
     MDBModalDialog,
     MDBModalContent,
     MDBModalHeader,
-    MDBModalTitle,
     MDBModalBody,
     MDBModalFooter,
   } from 'mdb-react-ui-kit';
 
 
-  import img1 from './assets/img/portfolio/fullsize/1.jpg';
-  import img2 from "./assets/img/portfolio/fullsize/2.jpg";
-  import img3 from "./assets/img/portfolio/fullsize/3.jpg";
-  import img4 from "./assets/img/portfolio/fullsize/4.jpg";
-  import img5 from "./assets/img/portfolio/fullsize/5.jpg";
-  import img6 from "./assets/img/portfolio/fullsize/6.jpg";
-
+  import img1 from '../assets/img/portfolio/fullsize/1.jpg';
+  import img2 from "../assets/img/portfolio/fullsize/2.jpg";
+  import img3 from "../assets/img/portfolio/fullsize/3.jpg";
+  import img4 from "../assets/img/portfolio/fullsize/4.jpg";
+  import img5 from "../assets/img/portfolio/fullsize/5.jpg";
+  import img6 from "../assets/img/portfolio/fullsize/6.jpg";
+  import { useAuth0 } from "@auth0/auth0-react";
   
-  const {registrarUsuario} = require("../scripts/UserController");
-  const {Login} = require("../scripts/LoginController");
+  const {registrarUsuario} = require("../../scripts/UserController");
+  const {Login} = require("../../scripts/LoginController");
 function Home() {
+    const {loginWithRedirect} = useAuth0();
 
     const [showModal, setShowModal] = useState(false);
     const changeShowModal = () => setShowModal(!showModal);
@@ -102,7 +89,7 @@ function Home() {
                                 <li className="nav-item px-2"><MDBBtn outline color='light' href="#pills-register" onClick={() =>{changeShowModal(); updateClassRegister();}}>
                                 Registrarse
                                 </MDBBtn></li>
-                                <li className="nav-item px-2"><li className="nav-item px-2"><MDBBtn rippleColor='dark' href="#pills-login" color='light' onClick={() =>{changeShowModal(); updateClassLogin();}}>Iniciar Sesión</MDBBtn></li></li>             
+                                <li className="nav-item px-2"><li className="nav-item px-2"><MDBBtn rippleColor='dark' href="#pills-login" color='light' onClick={() =>{{/*loginWithRedirect();*/}changeShowModal(); updateClassLogin();}}>Iniciar Sesión</MDBBtn></li></li>              
                             </ul>
                 
                         </div>

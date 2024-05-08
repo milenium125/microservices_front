@@ -22,9 +22,18 @@ import {
 } from 'mdb-react-ui-kit';
 
 
-export default function Header() {
+export default function Header(props) {
   const [showBasic, setShowBasic] = useState(false);
+  const [link, setLink] = useState("");
 
+  const definirRuta = () => {
+    if(props.user === 1){  //user = 1 para cliente  user = 2 para trabajador  user = 3 para empleado  user = 4 para administrador
+        setLink("/profile");
+      }if(props.user === 2){ 
+        setLink("/perfil-trabajador");
+      }
+  }
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -123,11 +132,12 @@ export default function Header() {
                         height="25"
                         alt="Black and White Portrait of a Man"
                         loading="lazy"
+                        onClick={definirRuta}
                     />
                     </MDBDropdownToggle>
                     <MDBDropdownMenu>
                         <MDBDropdownItem link childTag='button'>
-                            <Link to="/profile" target="_self">Mi cuenta</Link>
+                            <Link to={link} target="_self">Mi cuenta</Link>
                         
                         </MDBDropdownItem>
                         <MDBDropdownItem link childTag='button'>

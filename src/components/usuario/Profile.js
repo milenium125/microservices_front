@@ -2,8 +2,8 @@ import {Link, Routes, BrowserRouter} from 'react-router-dom';
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
 import { MDBProgress, MDBProgressBar } from 'mdb-react-ui-kit';
-import Header from './header';
-import MediosPago from './MediosPago';
+import Header from '../Header';
+import MediosPago from '../MediosPago';
 
 let cookies = document.cookie;
           var id_login = 0;

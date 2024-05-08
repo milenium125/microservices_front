@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { MDBProgress, MDBProgressBar } from 'mdb-react-ui-kit';
 import axios from 'axios';
-import { SideBar } from './profile';
+import { SideBar } from './Profile';
 
 let cookies = document.cookie;
           var id_login = 0;
@@ -194,7 +194,7 @@ export function AccountInformationTrabajador(){
                             <p className="mb-0">Celular</p>
                         </div>
                         <div className="col-sm-9">
-                            <p className="text-muted mb-0">(57) 322 4282 443</p>
+                            <p className="text-muted mb-0">322 4282 443</p>
                         </div>
                         </div>
                         <hr/>
