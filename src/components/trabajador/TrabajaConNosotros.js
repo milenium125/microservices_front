@@ -1,46 +1,23 @@
 import "../styles.css";
 
 import React, { useState } from 'react';
-import {Link, BrowserRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import { LoginTrabajador } from "../../scripts/LoginController";
 import {
     MDBCard,
     MDBCardBody,
     MDBCardTitle,
     MDBCardText,
-    MDBCardImage,
-    MDBCardHeader,
-    MDBRipple,
-    MDBCardFooter,
     MDBInput,
-    MDBContainer,
-    MDBNavbar,
-    MDBNavbarBrand,
-    MDBNavbarToggler,
-    MDBIcon,
-    MDBNavbarNav,
-    MDBNavbarItem,
-    MDBNavbarLink,
     MDBBtn,
-    MDBDropdown,
-    MDBDropdownToggle,
-    MDBDropdownMenu,
-    MDBDropdownItem,
-    MDBCollapse,
     MDBModal,
     MDBModalDialog,
     MDBModalContent,
     MDBModalHeader,
-    MDBModalTitle,
     MDBModalBody,
     MDBModalFooter,
-    MDBCardSubTitle,
-    MDBCheckbox,
-    MDBTextArea
   } from 'mdb-react-ui-kit';
 import axios from "axios";
-
-
 
 export default function TrabajaConNosotros(){
 
@@ -69,7 +46,6 @@ export default function TrabajaConNosotros(){
         const especialidad_trabajador = document.getElementById("especialidad-trabajador");
         const user_trabajador = document.getElementById("user-trabajador");
         const password_trabajador = document.getElementById("password-trabajador");
-
 
         objetoRegistro.nombre = nombre_trabajador.value;
         objetoRegistro.apellido = apellido_trabajador.value;
@@ -119,7 +95,7 @@ export default function TrabajaConNosotros(){
 
     /*Clase para mostrar el mensaje de cuenta creada del formulario de registro */
     const updateClassAlertSuccess = () => {
-        if(classAlertSuccess == "d-none"){
+        if(classAlertSuccess === "d-none"){
             setClassAlertSuccess("d-block");
             setClassDocumentos("d-none");
         }else{
@@ -142,8 +118,6 @@ export default function TrabajaConNosotros(){
 
         const archivoInput2 = document.getElementById("diploma");
         const archivo2 = archivoInput2.files[0];
-
-        
 
         // Crear una instancia de FormData
         const formData = new FormData();
@@ -205,14 +179,9 @@ export default function TrabajaConNosotros(){
 
         
     }
-
-
     return(
         <>
         {/*<!-- Navigation-->*/}
-            
-        
-
                 <MDBModal show={showModal}  tabIndex='-1' onClick={modalClose} className="modal-lg">
                 {/*<!-- Modal login-->*/}
                 {/* <!-- Pills navs --> */}

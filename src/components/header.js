@@ -1,29 +1,18 @@
 import React, { useState } from 'react';
-import {Link, BrowserRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import "./styles.css";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import {
-  MDBContainer,
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBNavbarToggler,
-  MDBIcon,
-  MDBNavbarNav,
-  MDBNavbarItem,
-  MDBNavbarLink,
-  MDBBtn,
   MDBDropdown,
   MDBDropdownToggle,
   MDBDropdownMenu,
   MDBDropdownItem,
-  MDBCollapse,
 } from 'mdb-react-ui-kit';
 
 
 export default function Header(props) {
-  const [showBasic, setShowBasic] = useState(false);
   const [link, setLink] = useState("");
 
   const definirRuta = () => {
@@ -54,7 +43,6 @@ export default function Header(props) {
 
                 {/* <!-- Collapsible wrapper --> */}
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                {/* <!-- Navbar brand --> */}
                 <a className="navbar-brand mt-2 mt-lg-0" href="#">
                     MicroServices
                 </a>
@@ -72,7 +60,7 @@ export default function Header(props) {
                 </div>
                 {/* <!-- Collapsible wrapper --> */}
                 <div className="input-group rounded px-5 w-75">
-                        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                        <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                         <span className="input-group-text border-0" id="search-addon">
                             <i className="fas fa-search"></i>
                         </span>

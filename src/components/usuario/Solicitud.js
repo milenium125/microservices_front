@@ -291,7 +291,7 @@ export function Solicitud(){
             }});
         //     console.log("result_servicio.data");
         // console.log(result_servicio.data);
-        let result_trabajador = await axios.get(`http://localhost:3200/api/trabajador/find/trabajador/${(result.data._employee)}`, {
+        let result_trabajador = await axios.get(`http://localhost:3200/api/trabajador/find/${(result.data._employee)}`, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'origin':'x-requested-with',
@@ -400,7 +400,7 @@ export function Solicitud(){
             let result_json = JSON.parse(result.data[i]);
             console.log(result_json);
             console.log("--------------------------------------");
-            let result_empleado = await axios.get(`http://localhost:3200/api/trabajador/find/trabajador/${result_json.empleado}`);
+            let result_empleado = await axios.get(`http://localhost:3200/api/trabajador/find/${result_json.empleado}`);
             console.log("empleado");
             console.log(result_empleado.data);
             console.log("datos"+ parseInt(result_json.empleado));

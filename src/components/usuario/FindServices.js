@@ -161,7 +161,8 @@ export default function FindServices(){
                         result_employee_json._pictureProfile,
                         (result_employee_json._firstNameUser + " " + result_employee_json._lastNameUser),
                         result_employee_json._ocupacion,
-                        result_employee_json._idUser
+                        result_employee_json._idUser,
+                        result_employee_json._idTrabajador
                     )
                 });
             }
@@ -208,9 +209,9 @@ export default function FindServices(){
         );
     }
 
-    const card_employee = (foto, nombre, profesion, id_empleado) =>{
+    const card_employee = (foto, nombre, profesion, id_persona, id_trabajador) =>{
         console.log(empleados);
-        console.log("id empleado: "+id_empleado);
+        console.log("id empleado: "+id_trabajador);
         return (
             <tr>
                 <td>
@@ -236,7 +237,7 @@ export default function FindServices(){
                     </MDBBadge>
                 </td>
                 <td>
-                    <MDBBtn color='link' rounded size='sm' onClick={()=>{changeModal(3); seleccionar(id_empleado)}}>
+                    <MDBBtn color='link' rounded size='sm' onClick={()=>{changeModal(3); seleccionar(id_trabajador)}}>
                     Seleccionar
                     </MDBBtn>
                 </td>
@@ -277,7 +278,7 @@ export default function FindServices(){
         var parametros1 = {
             "total_solicitud": precio,
             "metodo_pago": 1,
-            "estado": 1
+            "estado": 4
         }
         var pago = await axios.post("http://localhost:3200/api/payment/create",parametros1,{
             headers: {
