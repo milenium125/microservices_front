@@ -21,11 +21,13 @@ export default function Header(props) {
       }if(props.user === 2){ 
         setLink("/perfil-trabajador");
       }
+      console.log("link");
+      console.log(link);
   }
   
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light"  style={{maxWidth: 100 + "%"}}>
             {/* <!-- Container wrapper --> */}
             <div className="container-fluid ">
                 {/* <!-- Toggle button --> */}
@@ -52,7 +54,7 @@ export default function Header(props) {
                     <a className="nav-link col-">Calle 12 #45-67, Barrio El Prado</a>
                     </li>
                     <li className="nav-item">
-                    <a className="nav-link px-5">Servicios</a>
+                    <Link to="/findServices" className="nav-link px-5">Servicios</Link>
                     </li>
                 </ul>
                 

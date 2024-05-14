@@ -72,6 +72,7 @@ export default function FindServices(){
     const [fotoEmpleado, setFotoEmpleado] = useState("");
     const [profesionEmpleado, setProfesionEmpleado] = useState("");
     const [idPersonaEmpleado, setIdPersonaEmpleado] = useState("");
+    const [rol, setRol] = useState("");
 
     var result_client = [];
 
@@ -494,7 +495,7 @@ export default function FindServices(){
     }
     return(
         <>
-            <Header />
+            <Header user/>
             <div className="container-fluid px-5">
                 <nav className="d-flex flex-row bg-primary py-2 align-items-center container-fluid rounded-2">                  
                         <span className="inline mx-4 align-self-start">Categorias: </span>

@@ -215,7 +215,7 @@ export function Servicios(){
 
     return(
         <>
-        <Header />
+        <Header user={2}/>
         <div className='d-flex container-fluid px-3'>
         <SideBar ocupacion = {perfilTrabajador.ocupacion} estado = {perfilTrabajador.estado} nombre = {perfilTrabajador.nombre + " " + perfilTrabajador.apellido}/>
         <div className=''>

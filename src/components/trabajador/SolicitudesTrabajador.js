@@ -1,10 +1,11 @@
 import {Link, Routes, BrowserRouter} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import agente from '../assets/img/img-agente-chat-masculino.png';
 import Header from '../Header';
 import NuevaSolicitud from '../usuario/NuevaSolicitud';
 import { DetalleSolicitud } from '../usuario/Solicitud';
+import Footer from '../Footer';
 import {
     MDBTabs,
     MDBTabsItem,
@@ -23,6 +24,11 @@ import {
     MDBModalTitle,
     MDBModalBody,
     MDBModalFooter,
+    MDBCard,
+    MDBCardBody,
+    MDBCardTitle,
+    MDBCardText,
+    MDBCardImage,
   } from 'mdb-react-ui-kit';
 
   var estado_success = 'none';
@@ -309,246 +315,264 @@ export function SolicitudesTrabajador(){
             
     }
 
+    function HistorialOrdenes(){
+
+        return(
+            <>
+                <MDBTabs fill className='mb-3'>
+                            <MDBTabsItem>
+                                <MDBTabsLink onClick={() => {handleFillClick('tab4'); mostrarServicios(4); setTab(4)}} active={fillActive === 'tab4'}>
+                                    Por Aceptar
+                                </MDBTabsLink>
+                                </MDBTabsItem>
+                                <MDBTabsItem>
+                                <MDBTabsLink onClick={() => {handleFillClick('tab1'); mostrarServicios(1); setTab(1)}} active={fillActive === 'tab1'}>
+                                    Activas
+                                </MDBTabsLink>
+                                </MDBTabsItem>
+                                <MDBTabsItem>
+                                <MDBTabsLink onClick={() => {handleFillClick('tab2'); mostrarServicios(2); setTab(2)}} active={fillActive === 'tab2'}>
+                                    Completadas
+                                </MDBTabsLink>
+                                </MDBTabsItem>
+                                <MDBTabsItem>
+                                <MDBTabsLink onClick={() => {handleFillClick('tab3'); mostrarServicios(3); setTab(3)}} active={fillActive === 'tab3'}>
+                                    Canceladas
+                                </MDBTabsLink>
+                                </MDBTabsItem>
+                            </MDBTabs>
+    
+                            <MDBTabsContent>
+                            <MDBTabsPane show={contentTab('tab4')} >
+                                    <MDBTable align='middle'>
+                                            <MDBTableHead>
+                                                <tr>
+                                                <th scope='col'>Fecha creacion</th>
+                                                <th scope='col'>Cliente</th>
+                                                <th scope='col'>Estado</th>
+                                                <th scope='col'>Costo</th>
+                                                <th scope='col'>Actions</th>
+                                                </tr>
+                                            </MDBTableHead>
+                                            <MDBTableBody id='tab4'>
+                                            {solicitudes.map(solicitud =>(
+                                                    <tr>
+                                                    <td>
+                                                        <div className='d-flex align-items-center'>
+                                                        
+                                                        <div className='ms-3'>
+                                                            <p className='fw-bold mb-1'>{solicitud.fecha}</p>
+                                                        </div>
+                                                        </div>
+                                                </td>
+                                                    <td>
+                                                        <p className='fw-normal mb-1'>{solicitud.cliente}</p>
+                                                        <p className='text-muted mb-0'></p>
+                                                    </td>
+                                                    <td>
+                                                        <MDBBadge color='success'>
+                                                        {solicitud.estado}
+                                                        </MDBBadge>
+                                                    </td>
+                                                    <td>${solicitud.costo}</td>
+                                                    <td>
+                                                        <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
+                                                        Ver detalles
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                ))}
+                                            </MDBTableBody>
+                                        </MDBTable> 
+                                </MDBTabsPane>
+                                <MDBTabsPane show={contentTab("tab1")} >
+                                    <div class="alert alert-success" role="alert" style={{display:estadoSuccess}}>
+                                    Realizaste la solicitud correctamente, realiza el pago para continuar.
+                                    </div>
+                                    <MDBTable align='middle'>
+                                        <MDBTableHead>
+                                            <tr>
+                                            <th scope='col'>Fecha creacion</th>
+                                            <th scope='col'>Cliente</th>
+                                            <th scope='col'>Estado</th>
+                                            <th scope='col'>Costo</th>
+                                            <th scope='col'>Actions</th>
+                                            </tr>
+                                        </MDBTableHead>
+                                        <MDBTableBody id='tab1'>
+                                            {solicitudes.map(solicitud =>(
+                                                    <tr>
+                                                    <td>
+                                                        <div className='d-flex align-items-center'>
+                                                        
+                                                        <div className='ms-3'>
+                                                            <p className='fw-bold mb-1'>{solicitud.fecha}</p>
+                                                        </div>
+                                                        </div>
+                                                </td>
+                                                    <td>
+                                                        <p className='fw-normal mb-1'>{solicitud.cliente}</p>
+                                                        <p className='text-muted mb-0'></p>
+                                                    </td>
+                                                    <td>
+                                                        <MDBBadge color='success'>
+                                                        {solicitud.estado}
+                                                        </MDBBadge>
+                                                    </td>
+                                                    <td>{solicitud.costo}</td>
+                                                    <td>
+                                                        <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
+                                                        Ver detalles
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                ))}
+                                        </MDBTableBody>
+                                    </MDBTable> 
+                                </MDBTabsPane>
+                                <MDBTabsPane show={contentTab('tab2')} >
+                                    <MDBTable align='middle'>
+                                            <MDBTableHead>
+                                                <tr>
+                                                <th scope='col'>Fecha creacion</th>
+                                                <th scope='col'>Cliente</th>
+                                                <th scope='col'>Estado</th>
+                                                <th scope='col'>Costo</th>
+                                                <th scope='col'>Actions</th>
+                                                </tr>
+                                            </MDBTableHead>
+                                            <MDBTableBody id='tab2'>
+                                                {solicitudes.map(solicitud =>(
+                                                    <tr>
+                                                    <td>
+                                                        <div className='d-flex align-items-center'>
+                                                        
+                                                        <div className='ms-3'>
+                                                            <p className='fw-bold mb-1'>{solicitud.fecha}</p>
+                                                        </div>
+                                                        </div>
+                                                </td>
+                                                    <td>
+                                                        <p className='fw-normal mb-1'>{solicitud.cliente}</p>
+                                                        <p className='text-muted mb-0'></p>
+                                                    </td>
+                                                    <td>
+                                                        <MDBBadge color='success'>
+                                                        {solicitud.estado}
+                                                        </MDBBadge>
+                                                    </td>
+                                                    <td>{solicitud.costo}</td>
+                                                    <td>
+                                                        <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
+                                                        Ver detalles
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                ))}
+                                            </MDBTableBody>
+                                        </MDBTable> 
+                                </MDBTabsPane>
+                                <MDBTabsPane show={contentTab('tab3')} >
+                                <MDBTable align='middle'>
+                                            <MDBTableHead>
+                                                <tr>
+                                                <th scope='col'>Fecha creacion</th>
+                                                <th scope='col'>Cliente</th>
+                                                <th scope='col'>Estado</th>
+                                                <th scope='col'>Costo</th>
+                                                <th scope='col'>Actions</th>
+                                                </tr>
+                                            </MDBTableHead>
+                                            <MDBTableBody id='tab3'>
+                                                {solicitudes.map(solicitud =>(
+                                                    <tr>
+                                                    <td>
+                                                        <div className='d-flex align-items-center'>
+                                                        
+                                                        <div className='ms-3'>
+                                                            <p className='fw-bold mb-1'>{solicitud.fecha}</p>
+                                                        </div>
+                                                        </div>
+                                                </td>
+                                                    <td>
+                                                        <p className='fw-normal mb-1'>{solicitud.cliente}</p>
+                                                        <p className='text-muted mb-0'></p>
+                                                    </td>
+                                                    <td>
+                                                        <MDBBadge color='success'>
+                                                        {solicitud.estado}
+                                                        </MDBBadge>
+                                                    </td>
+                                                    <td>{solicitud.costo}</td>
+                                                    <td>
+                                                        <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
+                                                        Ver detalles
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                ))}
+                                            </MDBTableBody>
+                                        </MDBTable> 
+                                </MDBTabsPane>
+                            </MDBTabsContent>
+            </>
+        );
+    }
+
     return(
         <>
-            <section style={{backgroundColor: "#eee", height: "100vh"}} className="pb-5 w-100">
-            <Header />
+            <section style={{backgroundColor: "#eee", height: "100vh"}} className="pb-5 w-100 position-relative">
+            <Header user={2}/>
             {/* <!-- Navbar --> */}
             <div className="container-fluid d-flex py-5">
             {/* <!-- Navbar --> */}
             <MDBModal tabIndex='-1' show={centredModal} setShow={setCentredModal}>
-                    <MDBModalDialog>
-                        <MDBModalContent>
-                            {/* Componente DetalleSolicitud se encuentra en el archivo Solicitud.js */}
-                            <DetalleSolicitud servicio={servicio} categoria={categoria} descripcion={descripcion} precio={precio} profesionEmpleado={"Cliente"} nombreEmpleado={nombreCliente} foto={fotoCliente} toggleShow={toggleShow} idSolicitud={idSolicitud} cancelar={cambiarEstado} tab={tab} usuario={2} finalizar={finalizarSolicitud}/>
-                        </MDBModalContent>
-                    </MDBModalDialog>
-                </MDBModal>
-                <div>
-                    {/* sidebar profile*/}
-                    {sideBarSolicitud()}
-                    {/* sidebar profile*/}
-                </div>
-                <div className='w-100 ms-4'>
-                    {/* Account Information*/}
-                    <MDBTabs fill className='mb-3'>
-                    <MDBTabsItem>
-                        <MDBTabsLink onClick={() => {handleFillClick('tab4'); mostrarServicios(4); setTab(4)}} active={fillActive === 'tab4'}>
-                            Por Aceptar
-                        </MDBTabsLink>
-                        </MDBTabsItem>
-                        <MDBTabsItem>
-                        <MDBTabsLink onClick={() => {handleFillClick('tab1'); mostrarServicios(1); setTab(1)}} active={fillActive === 'tab1'}>
-                            Activas
-                        </MDBTabsLink>
-                        </MDBTabsItem>
-                        <MDBTabsItem>
-                        <MDBTabsLink onClick={() => {handleFillClick('tab2'); mostrarServicios(2); setTab(2)}} active={fillActive === 'tab2'}>
-                            Completadas
-                        </MDBTabsLink>
-                        </MDBTabsItem>
-                        <MDBTabsItem>
-                        <MDBTabsLink onClick={() => {handleFillClick('tab3'); mostrarServicios(3); setTab(3)}} active={fillActive === 'tab3'}>
-                            Canceladas
-                        </MDBTabsLink>
-                        </MDBTabsItem>
-                    </MDBTabs>
-
-                    <MDBTabsContent>
-                    <MDBTabsPane show={contentTab('tab4')} >
-                            <MDBTable align='middle'>
-                                    <MDBTableHead>
-                                        <tr>
-                                        <th scope='col'>Servicio</th>
-                                        <th scope='col'>Tecnic@</th>
-                                        <th scope='col'>Estado</th>
-                                        <th scope='col'>Costo</th>
-                                        <th scope='col'>Actions</th>
-                                        </tr>
-                                    </MDBTableHead>
-                                    <MDBTableBody id='tab4'>
-                                    {solicitudes.map(solicitud =>(
-                                            <tr>
-                                            <td>
-                                                <div className='d-flex align-items-center'>
-                                                
-                                                <div className='ms-3'>
-                                                    <p className='fw-bold mb-1'>{solicitud.fecha}</p>
-                                                </div>
-                                                </div>
-                                           </td>
-                                            <td>
-                                                <p className='fw-normal mb-1'>{solicitud.cliente}</p>
-                                                <p className='text-muted mb-0'></p>
-                                            </td>
-                                            <td>
-                                                <MDBBadge color='success'>
-                                                {solicitud.estado}
-                                                </MDBBadge>
-                                            </td>
-                                            <td>${solicitud.costo}</td>
-                                            <td>
-                                                <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
-                                                Ver detalles
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        ))}
-                                    </MDBTableBody>
-                                </MDBTable> 
-                        </MDBTabsPane>
-                        <MDBTabsPane show={contentTab("tab1")} >
-                            <div class="alert alert-success" role="alert" style={{display:estadoSuccess}}>
-                            Realizaste la solicitud correctamente, realiza el pago para continuar.
-                            </div>
-                            <MDBTable align='middle'>
-                                <MDBTableHead>
-                                    <tr>
-                                    <th scope='col'>Fecha creacion</th>
-                                    <th scope='col'>Cliente</th>
-                                    <th scope='col'>Estado</th>
-                                    <th scope='col'>Costo</th>
-                                    <th scope='col'>Actions</th>
-                                    </tr>
-                                </MDBTableHead>
-                                <MDBTableBody id='tab1'>
-                                    {solicitudes.map(solicitud =>(
-                                            <tr>
-                                            <td>
-                                                <div className='d-flex align-items-center'>
-                                                
-                                                <div className='ms-3'>
-                                                    <p className='fw-bold mb-1'>{solicitud.fecha}</p>
-                                                </div>
-                                                </div>
-                                           </td>
-                                            <td>
-                                                <p className='fw-normal mb-1'>{solicitud.cliente}</p>
-                                                <p className='text-muted mb-0'></p>
-                                            </td>
-                                            <td>
-                                                <MDBBadge color='success'>
-                                                {solicitud.estado}
-                                                </MDBBadge>
-                                            </td>
-                                            <td>{solicitud.costo}</td>
-                                            <td>
-                                                <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
-                                                Ver detalles
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        ))}
-                                </MDBTableBody>
-                            </MDBTable> 
-                        </MDBTabsPane>
-                        <MDBTabsPane show={contentTab('tab2')} >
-                            <MDBTable align='middle'>
-                                    <MDBTableHead>
-                                        <tr>
-                                        <th scope='col'>Servicio</th>
-                                        <th scope='col'>Cliente</th>
-                                        <th scope='col'>Estado</th>
-                                        <th scope='col'>Costo</th>
-                                        <th scope='col'>Actions</th>
-                                        </tr>
-                                    </MDBTableHead>
-                                    <MDBTableBody id='tab2'>
-                                        {solicitudes.map(solicitud =>(
-                                            <tr>
-                                            <td>
-                                                <div className='d-flex align-items-center'>
-                                                
-                                                <div className='ms-3'>
-                                                    <p className='fw-bold mb-1'>{solicitud.fecha}</p>
-                                                </div>
-                                                </div>
-                                           </td>
-                                            <td>
-                                                <p className='fw-normal mb-1'>{solicitud.cliente}</p>
-                                                <p className='text-muted mb-0'></p>
-                                            </td>
-                                            <td>
-                                                <MDBBadge color='success'>
-                                                {solicitud.estado}
-                                                </MDBBadge>
-                                            </td>
-                                            <td>{solicitud.costo}</td>
-                                            <td>
-                                                <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
-                                                Ver detalles
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        ))}
-                                    </MDBTableBody>
-                                </MDBTable> 
-                        </MDBTabsPane>
-                        <MDBTabsPane show={contentTab('tab3')} >
-                        <MDBTable align='middle'>
-                                    <MDBTableHead>
-                                        <tr>
-                                        <th scope='col'>Servicio</th>
-                                        <th scope='col'>Cliente</th>
-                                        <th scope='col'>Estado</th>
-                                        <th scope='col'>Costo</th>
-                                        <th scope='col'>Actions</th>
-                                        </tr>
-                                    </MDBTableHead>
-                                    <MDBTableBody id='tab3'>
-                                        {solicitudes.map(solicitud =>(
-                                            <tr>
-                                            <td>
-                                                <div className='d-flex align-items-center'>
-                                                
-                                                <div className='ms-3'>
-                                                    <p className='fw-bold mb-1'>{solicitud.fecha}</p>
-                                                </div>
-                                                </div>
-                                           </td>
-                                            <td>
-                                                <p className='fw-normal mb-1'>{solicitud.cliente}</p>
-                                                <p className='text-muted mb-0'></p>
-                                            </td>
-                                            <td>
-                                                <MDBBadge color='success'>
-                                                {solicitud.estado}
-                                                </MDBBadge>
-                                            </td>
-                                            <td>{solicitud.costo}</td>
-                                            <td>
-                                                <a href="#" onClick={() =>{toggleShow(); cargarSolicitud(solicitud.id_solicitud)}}>
-                                                Ver detalles
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        ))}
-                                    </MDBTableBody>
-                                </MDBTable> 
-                        </MDBTabsPane>
-                    </MDBTabsContent>
-                </div>
-                
-                {/* <MDBModal open={basicModal} setOpen={setBasicModal} tabIndex='-1'>
-                    <MDBModalDialog>
+                <MDBModalDialog>
                     <MDBModalContent>
-                        <MDBModalHeader>
-                        <MDBModalTitle>Modal title</MDBModalTitle>
-                        <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
-                        </MDBModalHeader>
-                        <MDBModalBody>...</MDBModalBody>
-
-                        <MDBModalFooter>
-                        <MDBBtn color='secondary' onClick={toggleOpen}>
-                            Close
-                        </MDBBtn>
-                        <MDBBtn>Save changes</MDBBtn>
-                        </MDBModalFooter>
+                        {/* Componente DetalleSolicitud se encuentra en el archivo Solicitud.js */}
+                        <DetalleSolicitud servicio={servicio} categoria={categoria} descripcion={descripcion} precio={precio} profesionEmpleado={"Cliente"} nombreEmpleado={nombreCliente} foto={fotoCliente} toggleShow={toggleShow} idSolicitud={idSolicitud} cancelar={cambiarEstado} tab={tab} usuario={2} finalizar={finalizarSolicitud}/>
                     </MDBModalContent>
-                    </MDBModalDialog>
-                </MDBModal> */}
-                
+                </MDBModalDialog>
+            </MDBModal>
+                <div className='d-flex w-100 justify-content-around flex-row ps-4'>
+                    <div>
+                        {/* sidebar profile*/}
+                        {sideBarSolicitud()}
+                        {/* sidebar profile*/}
+                    </div>
+                    <div className='w-100 ms-4'>
+                        {/* Account Information*/}
+                        <div className='d-block'><HistorialOrdenes /></div>
+                        <div className='d-block'><Calificacion /></div>
+                    </div>
+                    <div className='d-flex px-5' style={{maxWidth:20+"vw"}}>
+                        <hr className='mx-3' style={{borderLeft: "1px solid hsla(200, 10%, 50%,100"}}/>
+                        <MDBCard className='h-100'>
+                            <MDBCardImage src={agente} position='top' alt='...' />
+                            <MDBCardBody>
+                                <MDBCardTitle>¿Necesitas Ayuda? Contactanos</MDBCardTitle>
+                                <MDBCardText>
+                                    Si tienes problemas con algún pedido contactanos y te ayudaremos a solucionarlo.
+                                    Nuestro servicio esta disponible en Horario de 8am a 10pm. Contactanos atraves de nuestro LiveChat o por el chat en Whatsapp 
+                                </MDBCardText>
+                                <div className='d-flex justify-content-center'>
+                                    <div className='d-flex flex-column mx-3'>
+                                        <div className='d-flex justify-content-center' style={{cursor:"pointer"}}><i class="fa-brands fa-whatsapp fs-2 text-success"></i></div>
+                                        <p>Whatsapp</p>
+                                    </div>
+                                    <div className='d-flex flex-column mx-3 m-auto'>
+                                        <div className='d-flex justify-content-center' style={{cursor:"pointer"}}><i class="fa-solid fa-message fs-2 text-primary" ></i></div>
+                                        <p>Live Chat</p>
+                                    </div>
+                                </div>
+                                
+                            </MDBCardBody>
+                        </MDBCard>
+                    </div>
+                </div>
+                                
             </div>
+            <Footer />
         </section>
         </>
     );
@@ -566,7 +590,7 @@ export function SolicitudesTrabajador(){
                     </li>
                     <li className="list-group-item d-flex justify-content-start align-items-center p-3">
                         <i class="fas fa-list-check"></i>
-                        <a className="mx-5 mb-0 text-decoration-none" style={{cursor: "pointer"}} >Historial Solicitudes</a>
+                        <a className="mx-5 mb-0 text-decoration-none" style={{cursor: "pointer"}} onClick={() =>handleFillClick('tab2')}>Historial Solicitudes</a>
                     </li>
                     <li className="list-group-item d-flex justify-content-start align-items-center p-3">
                     <i class="bi bi-plus-square-fill"></i>
@@ -583,3 +607,13 @@ export function SolicitudesTrabajador(){
         );
     }
 }
+
+function Calificacion(){
+
+    return(
+        <>
+
+        </>
+    );
+}
+
